@@ -1,0 +1,58 @@
+# General
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+*.egg
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# JavaScript / TypeScript
+node_modules/
+*.tsbuildinfo
+.npm
+
+# Rust
+target/
+
+# Go
+*.test
+*.out
+
+# Zig
+.zig-cache/
+zig-cache/
+zig-out/
+*.o
+
+# Lua
+*.rock
+lua_modules/
+
+# Elixir
+_build/
+deps/
+.elixir_ls/
+*.beam
+*.ez
+erl_crash.dump
+.fetch
