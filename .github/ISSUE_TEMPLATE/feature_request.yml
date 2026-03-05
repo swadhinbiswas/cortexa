@@ -1,0 +1,68 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for contexa
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please describe what you'd like and why it would be useful.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature you'd like.
+      placeholder: "I'd like a `ws.squash()` method that combines multiple commits into one, similar to git squash."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed? What problem does it solve?
+      placeholder: "When agents create many small commits during exploration, the commit history becomes noisy. Squashing would allow cleaning up before a merge."
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API / Usage Example
+      description: If you have ideas for how the API should look, share them here. Pseudocode or any language is fine.
+      render: text
+
+  - type: checkboxes
+    id: languages
+    attributes:
+      label: Affected Languages
+      description: Which language implementations should include this feature?
+      options:
+        - label: Python
+        - label: JavaScript / TypeScript
+        - label: Rust
+        - label: Go
+        - label: Zig
+        - label: Lua
+        - label: Elixir
+        - label: All languages
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, references, or screenshots related to the feature request.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to submit a PR for this feature
