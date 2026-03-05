@@ -1,13 +1,13 @@
-# cortexa-gcc
+# contexa
 
-[![Crates.io](https://img.shields.io/crates/v/cortexa-gcc.svg)](https://crates.io/crates/cortexa-gcc)
-[![docs.rs](https://docs.rs/cortexa-gcc/badge.svg)](https://docs.rs/cortexa-gcc)
+[![Crates.io](https://img.shields.io/crates/v/contexa.svg)](https://crates.io/crates/contexa)
+[![docs.rs](https://docs.rs/contexa/badge.svg)](https://docs.rs/contexa)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FCortexa-black.svg?logo=github)](https://github.com/swadhinbiswas/Cortexa)
 
 **Git-inspired context management for LLM agents.** COMMIT, BRANCH, MERGE, and CONTEXT operations over a persistent versioned memory workspace.
 
-Rust implementation of the **cortexa** framework.
+Rust implementation of the **contexa** framework.
 
 Based on: [arXiv:2508.00031](https://arxiv.org/abs/2508.00031) -- *"Git Context Controller: Manage the Context of LLM-based Agents like Git"* (Junde Wu et al., 2025)
 
@@ -17,7 +17,7 @@ Based on: [arXiv:2508.00031](https://arxiv.org/abs/2508.00031) -- *"Git Context 
 
 ```toml
 [dependencies]
-cortexa = "0.1"
+contexa = "0.1"
 ```
 
 ---
@@ -25,9 +25,9 @@ cortexa = "0.1"
 ## Quick Start
 
 ```rust
-use cortexa::GCCWorkspace;
+use contexa::GCCWorkspace;
 
-fn main() -> cortexa::Result<()> {
+fn main() -> contexa::Result<()> {
     let mut ws = GCCWorkspace::new("/path/to/project");
     ws.init("Build a REST API service with user auth")?;
 
@@ -173,7 +173,7 @@ All data is stored as **human-readable Markdown and YAML**.
 
 ```bash
 git clone https://github.com/swadhinbiswas/Cortexa.git
-cd cortexa/RUST
+cd contexa/RUST
 cargo test
 ```
 
@@ -212,7 +212,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 ## Links
 
 - [GitHub Repository](https://github.com/swadhinbiswas/Cortexa)
-- [crates.io](https://crates.io/crates/cortexa-gcc)
-- [docs.rs](https://docs.rs/cortexa-gcc)
+- [crates.io](https://crates.io/crates/contexa)
+- [docs.rs](https://docs.rs/contexa)
 - [Original Paper](https://arxiv.org/abs/2508.00031)
 - [Author: Swadhin Biswas](https://github.com/swadhinbiswas)

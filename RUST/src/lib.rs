@@ -1,27 +1,11 @@
-//! # cortexa-gcc
+//! # contexa
 //!
 //! Git-inspired context management for LLM agents. COMMIT, BRANCH, MERGE, and
 //! CONTEXT operations over a persistent versioned memory workspace.
 //!
-//! Paper: *"Git Context Controller: Manage the Context of LLM-based Agents like Git"*
-//! arXiv:2508.00031 — Junde Wu et al., 2025
-//!
-//! ## File System Layout
-//! ```text
-//! .GCC/
-//! ├── main.md                 # Global roadmap / planning artifact
-//! └── branches/
-//!     ├── main/
-//!     │   ├── log.md          # Continuous OTA trace (Observation-Thought-Action)
-//!     │   ├── commit.md       # Milestone-level commit summaries
-//!     │   └── metadata.yaml   # Branch intent, status, creation info
-//!     └── <branch>/
-//!         └── ...
-//! ```
-//!
 //! ## Example
 //! ```rust,no_run
-//! use cortexa_gcc::GCCWorkspace;
+//! use contexa::GCCWorkspace;
 //!
 //! let mut ws = GCCWorkspace::new("/path/to/project");
 //! ws.init("Build a production REST API").unwrap();
