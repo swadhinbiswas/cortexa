@@ -294,7 +294,7 @@ jobs:
             echo "|----------|---------|"
             echo "| Python   | \`pip install cortexa\` |"
             echo "| JS/TS    | \`npm install cortexa\` |"
-            echo "| Rust     | \`cargo add cortexa\` |"
+            echo "| Rust     | \`cargo add cortexa-gcc\` |"
             echo "| Go       | \`go get github.com/swadhinbiswas/Cortexa/GO/cortexa@GO/$TAG\` |"
             echo "| Lua      | \`luarocks install cortexa\` |"
             echo "| Elixir   | \`{:cortexa, \"~> 0.1.1\"}\` in mix.exs |"

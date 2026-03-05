@@ -76,7 +76,7 @@ Outperforms 26 existing open and commercial agent systems. Key findings:
 |----------|---------|---------|
 | Python | [`cortexa`](https://pypi.org/project/cortexa/) | `pip install cortexa` |
 | TypeScript/JS | [`cortexa`](https://www.npmjs.com/package/cortexa) | `npm install cortexa` |
-| Rust | [`cortexa`](https://crates.io/crates/cortexa) | `cargo add cortexa` |
+| Rust | [`cortexa-gcc`](https://crates.io/crates/cortexa-gcc) | `cargo add cortexa-gcc` |
 | Go | [`cortexa`](https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO) | `go get github.com/swadhinbiswas/Cortexa/GO/cortexa` |
 | Lua | [`cortexa`](https://luarocks.org/modules/swadhinbiswas/cortexa) | `luarocks install cortexa` |
 | Elixir | [`cortexa`](https://hex.pm/packages/cortexa) | `{:cortexa, "~> 0.1.1"}` in mix.exs |

@@ -1,7 +1,7 @@
-# cortexa
+# cortexa-gcc
 
-[![Crates.io](https://img.shields.io/crates/v/cortexa.svg)](https://crates.io/crates/cortexa)
-[![docs.rs](https://docs.rs/cortexa/badge.svg)](https://docs.rs/cortexa)
+[![Crates.io](https://img.shields.io/crates/v/cortexa-gcc.svg)](https://crates.io/crates/cortexa-gcc)
+[![docs.rs](https://docs.rs/cortexa-gcc/badge.svg)](https://docs.rs/cortexa-gcc)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FCortexa-black.svg?logo=github)](https://github.com/swadhinbiswas/Cortexa)
 
@@ -212,7 +212,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 ## Links
 
 - [GitHub Repository](https://github.com/swadhinbiswas/Cortexa)
-- [crates.io](https://crates.io/crates/cortexa)
-- [docs.rs](https://docs.rs/cortexa)
+- [crates.io](https://crates.io/crates/cortexa-gcc)
+- [docs.rs](https://docs.rs/cortexa-gcc)
 - [Original Paper](https://arxiv.org/abs/2508.00031)
 - [Author: Swadhin Biswas](https://github.com/swadhinbiswas)
