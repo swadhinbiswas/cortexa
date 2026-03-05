@@ -1,7 +1,7 @@
-"""Tests for gcc-context Python package."""
+"""Tests for Contexa Python package."""
 
 import pytest
-from cortexa import GCCWorkspace
+from contexa import GCCWorkspace
 
 
 @pytest.fixture
@@ -84,7 +84,7 @@ def test_context_includes_roadmap(ws):
 
 def test_branch_metadata_records_purpose(ws):
     ws.branch("jwt-branch", "Test JWT auth approach")
-    from cortexa.models import BranchMetadata
+    from contexa.models import BranchMetadata
 
     meta_text = ws._read(ws._meta_path("jwt-branch"))
     meta = BranchMetadata.from_yaml(meta_text)
@@ -97,7 +97,7 @@ def test_merge_marks_branch_as_merged(ws):
     ws.branch("to-merge", "Will be merged")
     ws.commit("Branch work done")
     ws.merge("to-merge", target="main")
-    from cortexa.models import BranchMetadata
+    from contexa.models import BranchMetadata
 
     meta_text = ws._read(ws._meta_path("to-merge"))
     meta = BranchMetadata.from_yaml(meta_text)

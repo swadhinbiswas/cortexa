@@ -1,11 +1,11 @@
-# cortexa
+# contexa
 
-[![PyPI version](https://img.shields.io/pypi/v/cortexa.svg)](https://pypi.org/project/cortexa/)
+[![PyPI version](https://img.shields.io/pypi/v/contexa.svg)](https://pypi.org/project/contexa/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/swadhinbiswas/Cortexa/blob/main/LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FCortexa-black.svg?logo=github)](https://github.com/swadhinbiswas/Cortexa)
 
-A Python implementation of the **cortexa** framework -- Git-inspired context management for LLM agents.
+A Python implementation of the **contexa** framework -- Git-inspired context management for LLM agents.
 
 Based on: [arXiv:2508.00031](https://arxiv.org/abs/2508.00031) -- *"Git Context Controller: Manage the Context of LLM-based Agents like Git"* (Junde Wu et al., 2025)
 
@@ -73,13 +73,13 @@ The key insight from the paper: by controlling **how much history** the agent se
 ## Installation
 
 ```bash
-pip install cortexa
+pip install contexa
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add cortexa
+uv add contexa
 ```
 
 ---
@@ -87,7 +87,7 @@ uv add cortexa
 ## Quick Start
 
 ```python
-from cortexa import GCCWorkspace
+from contexa import GCCWorkspace
 
 # 1. Initialize a workspace
 ws = GCCWorkspace("/path/to/project")
@@ -284,7 +284,7 @@ All data is stored as **human-readable Markdown and YAML** -- you can inspect an
 All models support serialization:
 
 ```python
-from cortexa import OTARecord, BranchMetadata
+from contexa import OTARecord, BranchMetadata
 
 # OTARecord <-> dict
 record = OTARecord.from_dict({"timestamp": "...", "observation": "...", ...})
@@ -302,10 +302,10 @@ print(record.to_markdown())
 
 ## Real-World Example
 
-Here's how an autonomous coding agent might use cortexa to manage its memory while building a web application:
+Here's how an autonomous coding agent might use contexa to manage its memory while building a web application:
 
 ```python
-from cortexa import GCCWorkspace
+from contexa import GCCWorkspace
 
 ws = GCCWorkspace("./my-webapp")
 ws.init("Build a Flask web app with user auth, blog posts, and admin panel")
@@ -349,7 +349,7 @@ ws.commit("Blog post CRUD with auth-protected routes")
 ```bash
 # Clone the repository
 git clone https://github.com/swadhinbiswas/Cortexa.git
-cd cortexa
+cd contexa
 
 # Install dev dependencies and run tests
 uv sync
@@ -423,7 +423,7 @@ If you use this in research, please cite the original paper:
 ## Links
 
 - **GitHub Repository**: [https://github.com/swadhinbiswas/Cortexa](https://github.com/swadhinbiswas/Cortexa)
-- **PyPI Package**: [https://pypi.org/project/cortexa/](https://pypi.org/project/cortexa/)
+- **PyPI Package**: [https://pypi.org/project/contexa/](https://pypi.org/project/contexa/)
 - **Issue Tracker**: [https://github.com/swadhinbiswas/Cortexa/issues](https://github.com/swadhinbiswas/Cortexa/issues)
 - **Original Paper**: [arXiv:2508.00031v2](https://arxiv.org/abs/2508.00031v2)
 - **Author**: [Swadhin Biswas](https://github.com/swadhinbiswas)

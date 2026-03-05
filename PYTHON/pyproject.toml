@@ -1,5 +1,5 @@
 [project]
-name = "cortexa"
+name = "contexa"
 version = "0.1.1"
 description = "Python implementation of Git-Context-Controller (GCC)"
 readme = "README.md"
@@ -34,7 +34,7 @@ requires = ["hatchling>=1.21"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["cortexa"]
+packages = ["contexa"]
 
 [dependency-groups]
 dev = [
