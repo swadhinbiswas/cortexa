@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     // Module (for use as a dependency by consumers)
-    const mod = b.addModule("cortexa", .{
+    const mod = b.addModule("contexa", .{
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
@@ -13,7 +13,7 @@ pub fn build(b: *std.Build) void {
 
     // Static library artifact
     const lib = b.addLibrary(.{
-        .name = "cortexa",
+        .name = "contexa",
         .root_module = mod,
     });
     b.installArtifact(lib);
