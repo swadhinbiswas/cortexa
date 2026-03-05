@@ -1,11 +1,11 @@
-defmodule Cortexa.WorkspaceTest do
+defmodule Contexa.WorkspaceTest do
   use ExUnit.Case, async: true
 
-  alias Cortexa.Workspace
-  alias Cortexa.Models
+  alias Contexa.Workspace
+  alias Contexa.Models
 
   defp make_tmp do
-    dir = Path.join(System.tmp_dir!(), "cortexa_ex_test_#{System.unique_integer([:positive])}")
+    dir = Path.join(System.tmp_dir!(), "contexa_ex_test_#{System.unique_integer([:positive])}")
     File.rm_rf!(dir)
     File.mkdir_p!(dir)
     dir
