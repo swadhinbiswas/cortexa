@@ -1,0 +1,110 @@
+name: Bug Report
+description: Report a bug in contexa
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill out the form below to help us diagnose and fix the issue.
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language / Package
+      description: Which language implementation is affected?
+      options:
+        - Python (PyPI)
+        - JavaScript / TypeScript (npm)
+        - Rust (crates.io)
+        - Go (pkg.go.dev)
+        - Zig
+        - Lua (LuaRocks)
+        - Elixir (Hex.pm)
+        - Multiple / All
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package Version
+      description: "Which version of contexa are you using? (e.g. 0.1.1)"
+      placeholder: "0.1.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: "When I call ws.commit(...), it raises an error instead of creating a commit record."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal code or steps to reproduce the behavior.
+      placeholder: |
+        1. Create a workspace: `ws = GCCWorkspace("/tmp/test")`
+        2. Initialize: `ws.init()`
+        3. Call: `ws.commit("test")`
+        4. See error
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened. Include error messages or stack traces if applicable.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Paste any relevant log output, stack traces, or error messages.
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem (screenshots, related issues, workarounds tried, etc.)
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and this hasn't been reported before
+          required: true
+        - label: I am using the latest version of contexa
+          required: false
