@@ -1,4 +1,4 @@
-package cortexa
+package contexa
 
 import (
 	"os"

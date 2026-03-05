@@ -1,4 +1,4 @@
-// Package cortexa implements cortexa — Git-inspired context management
+// Package contexa implements contexa — Git-inspired context management
 // for LLM agents. COMMIT, BRANCH, MERGE, and CONTEXT over versioned memory.
 //
 // Paper: "Git Context Controller: Manage the Context of LLM-based Agents like Git"
@@ -6,7 +6,7 @@
 //
 // Author: Swadhin Biswas (@swadhinbiswas)
 
-package cortexa
+package contexa
 
 import (
 	"fmt"
