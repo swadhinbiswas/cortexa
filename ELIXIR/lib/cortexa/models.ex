@@ -1,8 +1,8 @@
-defmodule Contexa.Models do
+defmodule Cortexa.Models do
   @moduledoc """
-  Data structures for the contexa GCC workspace.
+  Data structures for the cortexa GCC workspace.
 
-  contexa — Git-inspired context management for LLM agents.
+  cortexa — Git-inspired context management for LLM agents.
   Based on arXiv:2508.00031.
   """
 
@@ -139,6 +139,48 @@ defmodule Contexa.Models do
     }
   end
 
+  # ── Input sanitization ─────────────────────────────────────────────
+
+  @doc "Escape separator sequences in user-provided content."
+  @spec sanitize(String.t()) :: String.t()
+  def sanitize(text) when is_binary(text) do
+    String.replace(text, "\n---\n", "\n\\---\n")
+  end
+  def sanitize(nil), do: ""
+
+  @doc "Reverse the escaping applied by sanitize."
+  @spec desanitize(String.t()) :: String.t()
+  def desanitize(text) when is_binary(text) do
+    String.replace(text, "\n\\---\n", "\n---\n")
+  end
+  def desanitize(nil), do: ""
+
+  @doc """
+  Split markdown text on separator while respecting escaped separators.
+
+  After naive splitting on the delimiter, blocks whose predecessor ends
+  with `\\` are rejoined (the backslash means `\\---\\n` was an escaped
+  separator produced by `sanitize/1`).
+  """
+  @spec split_blocks(String.t(), String.t()) :: [String.t()]
+  def split_blocks(text, delim \\ "\n---\n") do
+    text
+    |> String.split(delim)
+    |> rejoin_escaped(delim, [])
+  end
+
+  defp rejoin_escaped([], _delim, acc), do: Enum.reverse(acc)
+  defp rejoin_escaped([block | rest], delim, []) do
+    rejoin_escaped(rest, delim, [block])
+  end
+  defp rejoin_escaped([block | rest], delim, [prev | acc]) do
+    if String.ends_with?(prev, "\\") do
+      rejoin_escaped(rest, delim, [prev <> delim <> block | acc])
+    else
+      rejoin_escaped(rest, delim, [block, prev | acc])
+    end
+  end
+
   # ── Markdown serialization ────────────────────────────────────────
 
   @doc "Render an OTARecord as markdown."
@@ -146,11 +188,11 @@ defmodule Contexa.Models do
   def ota_to_markdown(%OTARecord{} = rec) do
     """
     ### Step #{rec.step} — #{rec.timestamp}
-    **Observation:** #{rec.observation}
+    **Observation:** #{sanitize(rec.observation)}
 
-    **Thought:** #{rec.thought}
+    **Thought:** #{sanitize(rec.thought)}
 
-    **Action:** #{rec.action}
+    **Action:** #{sanitize(rec.action)}
 
     ---
     """
@@ -163,11 +205,11 @@ defmodule Contexa.Models do
     ## Commit `#{rec.commit_id}`
     **Timestamp:** #{rec.timestamp}
 
-    **Branch Purpose:** #{rec.branch_purpose}
+    **Branch Purpose:** #{sanitize(rec.branch_purpose)}
 
-    **Previous Progress Summary:** #{rec.previous_progress_summary}
+    **Previous Progress Summary:** #{sanitize(rec.previous_progress_summary)}
 
-    **This Commit's Contribution:** #{rec.this_commit_contribution}
+    **This Commit's Contribution:** #{sanitize(rec.this_commit_contribution)}
 
     ---
     """
@@ -242,7 +284,7 @@ defmodule Contexa.Models do
   @spec parse_commits(String.t()) :: [CommitRecord.t()]
   def parse_commits(text) do
     text
-    |> String.split("\n---\n")
+    |> split_blocks("\n---\n")
     |> Enum.map(&String.trim/1)
     |> Enum.filter(&(&1 != ""))
     |> Enum.reduce([], fn block, acc ->
@@ -263,9 +305,9 @@ defmodule Contexa.Models do
           commit_id: commit_id,
           branch_name: "",
           timestamp: extract.(~r/\*\*Timestamp:\*\*\s*(.+)/),
-          branch_purpose: extract.(~r/\*\*Branch Purpose:\*\*\s*(.+)/),
-          previous_progress_summary: extract.(~r/\*\*Previous Progress Summary:\*\*\s*(.+)/),
-          this_commit_contribution: extract.(~r/\*\*This Commit's Contribution:\*\*\s*(.+)/)
+          branch_purpose: desanitize(extract.(~r/\*\*Branch Purpose:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\z)/)),
+          previous_progress_summary: desanitize(extract.(~r/\*\*Previous Progress Summary:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\z)/)),
+          this_commit_contribution: desanitize(extract.(~r/\*\*This Commit's Contribution:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\n\n---|\z)/))
         }
         acc ++ [rec]
       else
@@ -278,7 +320,7 @@ defmodule Contexa.Models do
   @spec parse_ota(String.t()) :: [OTARecord.t()]
   def parse_ota(text) do
     text
-    |> String.split("\n---\n")
+    |> split_blocks("\n---\n")
     |> Enum.map(&String.trim/1)
     |> Enum.filter(&(&1 != ""))
     |> Enum.reduce([], fn block, acc ->
@@ -294,9 +336,9 @@ defmodule Contexa.Models do
         end
       end
 
-      obs = extract.(~r/\*\*Observation:\*\*\s*(.+)/)
-      thought = extract.(~r/\*\*Thought:\*\*\s*(.+)/)
-      action = extract.(~r/\*\*Action:\*\*\s*(.+)/)
+      obs = desanitize(extract.(~r/\*\*Observation:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\z)/))
+      thought = desanitize(extract.(~r/\*\*Thought:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\z)/))
+      action = desanitize(extract.(~r/\*\*Action:\*\*\s*([\s\S]+?)(?=\n\n\*\*|\n\n---|\z)/))
 
       if obs != "" or thought != "" or action != "" do
         rec = %OTARecord{

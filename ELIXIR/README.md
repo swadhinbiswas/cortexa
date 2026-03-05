@@ -1,4 +1,4 @@
-# contexa — Elixir
+# cortexa — Elixir
 
 Git-inspired context management for LLM agents — **COMMIT**, **BRANCH**, **MERGE**, and **CONTEXT** operations over a persistent versioned memory workspace.
 
@@ -11,7 +11,7 @@ Add to your `mix.exs`:
 ```elixir
 def deps do
   [
-    {:contexa, "~> 0.1.1"}
+    {:cortexa, "~> 0.1.1"}
   ]
 end
 ```
@@ -19,7 +19,7 @@ end
 ## Quick Start
 
 ```elixir
-alias Contexa.{Workspace, Models}
+alias Cortexa.{Workspace, Models}
 
 # Create workspace
 ws = Workspace.new("/tmp/my-project")
@@ -46,7 +46,7 @@ IO.puts(Models.context_summary(ctx))
 
 ## API
 
-### `Contexa.Workspace`
+### `Cortexa.Workspace`
 
 | Function | Description |
 |----------|-------------|

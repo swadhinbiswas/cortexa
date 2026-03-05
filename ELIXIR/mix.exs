@@ -1,12 +1,12 @@
-defmodule Contexa.MixProject do
+defmodule Cortexa.MixProject do
   use Mix.Project
 
   @version "0.1.1"
-  @source_url "https://github.com/swadhinbiswas/contexa"
+  @source_url "https://github.com/swadhinbiswas/Cortexa"
 
   def project do
     [
-      app: :contexa,
+      app: :cortexa,
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -45,7 +45,7 @@ defmodule Contexa.MixProject do
 
   defp package do
     [
-      name: "contexa",
+      name: "cortexa",
       licenses: ["MIT"],
       links: %{
         "GitHub" => @source_url,
