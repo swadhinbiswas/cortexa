@@ -1,4 +1,4 @@
-//! # contexa
+//! # cortexa
 //!
 //! Git-inspired context management for LLM agents. COMMIT, BRANCH, MERGE, and
 //! CONTEXT operations over a persistent versioned memory workspace.
@@ -21,7 +21,7 @@
 //!
 //! ## Example
 //! ```rust,no_run
-//! use contexa::GCCWorkspace;
+//! use cortexa::GCCWorkspace;
 //!
 //! let mut ws = GCCWorkspace::new("/path/to/project");
 //! ws.init("Build a production REST API").unwrap();

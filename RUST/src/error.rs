@@ -14,6 +14,12 @@ pub enum GCCError {
     #[error("Branch '{name}' not found")]
     BranchNotFound { name: String },
 
+    #[error("Failed to acquire lock: {0}")]
+    Lock(String),
+
+    #[error("Validation error: {0}")]
+    Validation(String),
+
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 

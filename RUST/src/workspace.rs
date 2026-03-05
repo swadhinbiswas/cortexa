@@ -4,10 +4,13 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use chrono::Utc;
+use fs2::FileExt;
 use uuid::Uuid;
 
 use crate::error::{GCCError, Result};
-use crate::models::{BranchMetadata, CommitRecord, ContextResult, OTARecord};
+use crate::models::{
+    desanitize, split_blocks, BranchMetadata, CommitRecord, ContextResult, OTARecord,
+};
 
 const MAIN_BRANCH: &str = "main";
 const GCC_DIR: &str = ".GCC";
@@ -20,6 +23,30 @@ fn short_id() -> String {
     Uuid::new_v4().to_string()[..8].to_string()
 }
 
+/// Return `Err(Validation)` if `value` is empty or whitespace-only.
+fn validate_not_empty(value: &str, field: &str) -> Result<()> {
+    if value.trim().is_empty() {
+        return Err(GCCError::Validation(format!("{field} must not be empty")));
+    }
+    Ok(())
+}
+
+/// Return `Err(Validation)` if `name` is not a valid branch identifier.
+fn validate_branch_name(name: &str) -> Result<()> {
+    validate_not_empty(name, "Branch name")?;
+    if name.contains('/') || name.contains('\\') {
+        return Err(GCCError::Validation(format!(
+            "Branch name must not contain path separators: {name:?}"
+        )));
+    }
+    if name == "." || name == ".." {
+        return Err(GCCError::Validation(format!(
+            "Branch name must not be '.' or '..': {name:?}"
+        )));
+    }
+    Ok(())
+}
+
 /// Manages the `.GCC/` directory structure for one agent project.
 ///
 /// Implements the four GCC commands from arXiv:2508.00031v2:
@@ -28,17 +55,42 @@ fn short_id() -> String {
 ///   - MERGE   (§3.4): synthesise divergent paths
 ///   - CONTEXT (§3.5): hierarchical memory retrieval
 pub struct GCCWorkspace {
-    root: PathBuf,
     gcc_dir: PathBuf,
     current_branch: String,
 }
 
+/// RAII file lock guard. Acquires exclusive lock on creation, releases on drop.
+struct FileLock {
+    _file: fs::File,
+}
+
+impl FileLock {
+    fn acquire(gcc_dir: &Path) -> Result<Self> {
+        let lock_path = gcc_dir.join(".lock");
+        if let Some(parent) = lock_path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        let file = fs::OpenOptions::new()
+            .create(true)
+            .read(true)
+            .write(true)
+            .open(&lock_path)?;
+        file.lock_exclusive()
+            .map_err(|e| GCCError::Lock(e.to_string()))?;
+        Ok(Self { _file: file })
+    }
+}
+
+impl Drop for FileLock {
+    fn drop(&mut self) {
+        let _ = self._file.unlock();
+    }
+}
+
 impl GCCWorkspace {
     pub fn new(project_root: impl AsRef<Path>) -> Self {
-        let root = project_root.as_ref().to_path_buf();
-        let gcc_dir = root.join(GCC_DIR);
+        let gcc_dir = project_root.as_ref().join(GCC_DIR);
         Self {
-            root,
             gcc_dir,
             current_branch: MAIN_BRANCH.to_string(),
         }
@@ -97,45 +149,65 @@ impl GCCWorkspace {
     fn read_commits(&self, branch: &str) -> Vec<CommitRecord> {
         let text = self.read(&self.commit_path(branch));
         let mut records = Vec::new();
-        for block in text.split("---\n") {
+        for block in split_blocks(&text) {
             let block = block.trim();
             if block.is_empty() {
                 continue;
             }
             let mut commit_id = String::new();
-            let mut branch_purpose = String::new();
-            let mut prev_summary = String::new();
-            let mut contribution = String::new();
             let mut ts = String::new();
+            let mut current_field: Option<&str> = None;
+            let mut fields: std::collections::HashMap<&str, String> =
+                std::collections::HashMap::new();
+
             for line in block.lines() {
                 if line.starts_with("## Commit `") {
                     commit_id = line
                         .trim_start_matches("## Commit `")
                         .trim_end_matches('`')
                         .to_string();
+                    current_field = None;
                 } else if line.starts_with("**Timestamp:**") {
                     ts = line.replace("**Timestamp:**", "").trim().to_string();
+                    current_field = None;
                 } else if line.starts_with("**Branch Purpose:**") {
-                    branch_purpose = line.replace("**Branch Purpose:**", "").trim().to_string();
+                    let val = line.replace("**Branch Purpose:**", "").trim().to_string();
+                    fields.insert("branch_purpose", val);
+                    current_field = Some("branch_purpose");
                 } else if line.starts_with("**Previous Progress Summary:**") {
-                    prev_summary = line
+                    let val = line
                         .replace("**Previous Progress Summary:**", "")
                         .trim()
                         .to_string();
+                    fields.insert("prev_summary", val);
+                    current_field = Some("prev_summary");
                 } else if line.starts_with("**This Commit's Contribution:**") {
-                    contribution = line
+                    let val = line
                         .replace("**This Commit's Contribution:**", "")
                         .trim()
                         .to_string();
+                    fields.insert("contribution", val);
+                    current_field = Some("contribution");
+                } else if let Some(field) = current_field {
+                    let trimmed = line.trim();
+                    if !trimmed.is_empty() {
+                        if let Some(existing) = fields.get_mut(field) {
+                            existing.push('\n');
+                            existing.push_str(trimmed);
+                        }
+                    }
                 }
             }
             if !commit_id.is_empty() {
+                let get = |key: &str| -> String {
+                    desanitize(fields.get(key).map(|s| s.trim()).unwrap_or(""))
+                };
                 records.push(CommitRecord {
                     commit_id,
                     branch_name: branch.to_string(),
-                    branch_purpose,
-                    previous_progress_summary: prev_summary,
-                    this_commit_contribution: contribution,
+                    branch_purpose: get("branch_purpose"),
+                    previous_progress_summary: get("prev_summary"),
+                    this_commit_contribution: get("contribution"),
                     timestamp: ts,
                 });
             }
@@ -146,16 +218,17 @@ impl GCCWorkspace {
     fn read_ota(&self, branch: &str) -> Vec<OTARecord> {
         let text = self.read(&self.log_path(branch));
         let mut records = Vec::new();
-        for block in text.split("---\n") {
+        for block in split_blocks(&text) {
             let block = block.trim();
             if block.is_empty() {
                 continue;
             }
             let mut step = 0usize;
             let mut ts = String::new();
-            let mut obs = String::new();
-            let mut thought = String::new();
-            let mut action = String::new();
+            let mut current_field: Option<&str> = None;
+            let mut fields: std::collections::HashMap<&str, String> =
+                std::collections::HashMap::new();
+
             for line in block.lines() {
                 if line.starts_with("### Step ") {
                     let parts: Vec<&str> = line.splitn(2, '—').collect();
@@ -165,21 +238,41 @@ impl GCCWorkspace {
                         .parse()
                         .unwrap_or(0);
                     ts = parts.get(1).unwrap_or(&"").trim().to_string();
+                    current_field = None;
                 } else if line.starts_with("**Observation:**") {
-                    obs = line.replace("**Observation:**", "").trim().to_string();
+                    let val = line.replace("**Observation:**", "").trim().to_string();
+                    fields.insert("obs", val);
+                    current_field = Some("obs");
                 } else if line.starts_with("**Thought:**") {
-                    thought = line.replace("**Thought:**", "").trim().to_string();
+                    let val = line.replace("**Thought:**", "").trim().to_string();
+                    fields.insert("thought", val);
+                    current_field = Some("thought");
                 } else if line.starts_with("**Action:**") {
-                    action = line.replace("**Action:**", "").trim().to_string();
+                    let val = line.replace("**Action:**", "").trim().to_string();
+                    fields.insert("action", val);
+                    current_field = Some("action");
+                } else if let Some(field) = current_field {
+                    let trimmed = line.trim();
+                    if !trimmed.is_empty() {
+                        if let Some(existing) = fields.get_mut(field) {
+                            existing.push('\n');
+                            existing.push_str(trimmed);
+                        }
+                    }
                 }
             }
+            let get = |key: &str| -> String {
+                desanitize(fields.get(key).map(|s| s.trim()).unwrap_or(""))
+            };
+            let obs = get("obs");
+            let thought = get("thought");
             if !obs.is_empty() || !thought.is_empty() {
                 records.push(OTARecord {
                     step,
                     timestamp: ts,
                     observation: obs,
                     thought,
-                    action,
+                    action: get("action"),
                 });
             }
         }
@@ -208,6 +301,8 @@ impl GCCWorkspace {
 
         let main_dir = self.branch_dir(MAIN_BRANCH);
         fs::create_dir_all(&main_dir)?;
+
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
 
         // main.md — global roadmap
         let roadmap = format!(
@@ -261,6 +356,12 @@ impl GCCWorkspace {
     /// Append an OTA step to the current branch's `log.md`.
     /// The paper logs continuous Observation–Thought–Action cycles.
     pub fn log_ota(&self, observation: &str, thought: &str, action: &str) -> Result<OTARecord> {
+        if observation.trim().is_empty() && thought.trim().is_empty() && action.trim().is_empty() {
+            return Err(GCCError::Validation(
+                "At least one of observation, thought, or action must be non-empty".to_string(),
+            ));
+        }
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
         let existing = self.read_ota(&self.current_branch);
         let step = existing.len() + 1;
         let record = OTARecord {
@@ -279,6 +380,18 @@ impl GCCWorkspace {
     /// Persists a milestone checkpoint to `commit.md` with fields:
     /// Branch Purpose, Previous Progress Summary, This Commit's Contribution.
     pub fn commit(
+        &self,
+        contribution: &str,
+        previous_summary: Option<&str>,
+        update_roadmap: Option<&str>,
+    ) -> Result<CommitRecord> {
+        validate_not_empty(contribution, "Contribution")?;
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
+        self.commit_inner(contribution, previous_summary, update_roadmap)
+    }
+
+    /// Internal commit logic, called with lock already held.
+    fn commit_inner(
         &self,
         contribution: &str,
         previous_summary: Option<&str>,
@@ -325,6 +438,8 @@ impl GCCWorkspace {
     /// Creates isolated workspace: B_t^(name) = BRANCH(M_{t-1}).
     /// Initialises empty OTA trace and commit.md; metadata records intent.
     pub fn branch(&mut self, name: &str, purpose: &str) -> Result<()> {
+        validate_branch_name(name)?;
+        validate_not_empty(purpose, "Branch purpose")?;
         let branch_dir = self.branch_dir(name);
         if branch_dir.exists() {
             return Err(GCCError::BranchExists {
@@ -333,6 +448,8 @@ impl GCCWorkspace {
         }
 
         fs::create_dir_all(&branch_dir)?;
+
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
         self.write(
             &self.log_path(name),
             &format!("# OTA Log — branch `{name}`\n\n"),
@@ -367,11 +484,15 @@ impl GCCWorkspace {
         summary: Option<&str>,
         target: &str,
     ) -> Result<CommitRecord> {
+        validate_branch_name(branch_name)?;
+        validate_branch_name(target)?;
         if !self.branch_dir(branch_name).exists() {
             return Err(GCCError::BranchNotFound {
                 name: branch_name.to_string(),
             });
         }
+
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
 
         let branch_commits = self.read_commits(branch_name);
         let branch_ota = self.read_ota(branch_name);
@@ -409,7 +530,7 @@ impl GCCWorkspace {
             branch_name,
             meta.as_ref().map(|m| m.purpose.as_str()).unwrap_or("")
         );
-        let merge_commit = self.commit(&merge_summary, Some(&prev), Some(&merge_summary))?;
+        let merge_commit = self.commit_inner(&merge_summary, Some(&prev), Some(&merge_summary))?;
 
         // Mark branch as merged
         if let Some(mut m) = meta {
@@ -427,6 +548,10 @@ impl GCCWorkspace {
     /// Retrieves historical context at K-commit resolution.
     /// Paper experiments use K=1 (only most recent commit revealed).
     pub fn context(&self, branch: Option<&str>, k: usize) -> Result<ContextResult> {
+        if k < 1 {
+            return Err(GCCError::Validation(format!("k must be >= 1, got {k}")));
+        }
+        let _lock = FileLock::acquire(&self.gcc_dir)?;
         let target = branch.unwrap_or(&self.current_branch);
         if !self.branch_dir(target).exists() {
             return Err(GCCError::BranchNotFound {
@@ -464,6 +589,7 @@ impl GCCWorkspace {
     }
 
     pub fn switch_branch(&mut self, name: &str) -> Result<()> {
+        validate_branch_name(name)?;
         if !self.branch_dir(name).exists() {
             return Err(GCCError::BranchNotFound {
                 name: name.to_string(),

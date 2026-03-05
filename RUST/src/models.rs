@@ -2,6 +2,38 @@
 
 use serde::{Deserialize, Serialize};
 
+/// Escape the `---` block separator so user content cannot break parsers.
+pub fn sanitize(text: &str) -> String {
+    text.replace("\n---\n", "\n\\---\n")
+}
+
+/// Reverse the escaping applied by [`sanitize`].
+pub fn desanitize(text: &str) -> String {
+    text.replace("\n\\---\n", "\n---\n")
+}
+
+/// Split markdown text on `---\n` separators while respecting escaped
+/// separators (`\---\n` produced by [`sanitize`]).  After splitting,
+/// the escaped backslash is left in place; callers should apply
+/// [`desanitize`] on individual field values.
+pub fn split_blocks(text: &str) -> Vec<String> {
+    let raw: Vec<&str> = text.split("---\n").collect();
+    let mut blocks: Vec<String> = Vec::new();
+    let mut i = 0;
+    while i < raw.len() {
+        let mut block = raw[i].to_string();
+        // If block ends with '\', the `---\n` was an escaped separator — rejoin.
+        while block.ends_with('\\') && i + 1 < raw.len() {
+            i += 1;
+            block.push_str("---\n");
+            block.push_str(raw[i]);
+        }
+        blocks.push(block);
+        i += 1;
+    }
+    blocks
+}
+
 /// A single Observation–Thought–Action step logged to `log.md`.
 /// The paper continuously logs OTA cycles as the agent executes.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17,7 +49,11 @@ impl OTARecord {
     pub fn to_markdown(&self) -> String {
         format!(
             "### Step {} — {}\n**Observation:** {}\n\n**Thought:** {}\n\n**Action:** {}\n\n---\n",
-            self.step, self.timestamp, self.observation, self.thought, self.action
+            self.step,
+            self.timestamp,
+            sanitize(&self.observation),
+            sanitize(&self.thought),
+            sanitize(&self.action),
         )
     }
 }
@@ -42,9 +78,9 @@ impl CommitRecord {
              **This Commit's Contribution:** {}\n\n---\n",
             self.commit_id,
             self.timestamp,
-            self.branch_purpose,
-            self.previous_progress_summary,
-            self.this_commit_contribution,
+            sanitize(&self.branch_purpose),
+            sanitize(&self.previous_progress_summary),
+            sanitize(&self.this_commit_contribution),
         )
     }
 }
