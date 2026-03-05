@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://github.com/swadhinbiswas/contexa#readme
+    url: https://github.com/swadhinbiswas/Cortexa#readme
     about: Read the documentation before opening an issue
   - name: Paper (arXiv)
     url: https://arxiv.org/abs/2508.00031

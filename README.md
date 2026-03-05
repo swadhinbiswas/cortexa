@@ -1,48 +1,72 @@
-# contexa
+<p align="center">
+  <img src="assets/logo.svg" alt="Cortexa" width="500" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![arXiv](https://img.shields.io/badge/arXiv-2508.00031-b31b1b.svg)](https://arxiv.org/abs/2508.00031)
-[![PyPI](https://img.shields.io/pypi/v/contexa.svg)](https://pypi.org/project/contexa/)
-[![npm](https://img.shields.io/npm/v/contexa.svg)](https://www.npmjs.com/package/contexa)
-[![crates.io](https://img.shields.io/crates/v/contexa.svg)](https://crates.io/crates/contexa)
-[![Go Reference](https://pkg.go.dev/badge/github.com/swadhinbiswas/contexa/GO.svg)](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO)
-[![Hex.pm](https://img.shields.io/hexpm/v/contexa.svg)](https://hex.pm/packages/contexa)
+<p align="center">
+  <strong>Versioned memory for AI agents</strong><br>
+  <em>A brain-inspired context management system based on Git's branching model</em>
+</p>
 
-**Git-inspired context management for LLM agents.** COMMIT, BRANCH, MERGE, and CONTEXT operations over a persistent versioned memory workspace.
-
-Based on the research paper:
-
-> *"Git Context Controller: Manage the Context of LLM-based Agents like Git"*
-> Junde Wu et al., [arXiv:2508.00031](https://arxiv.org/abs/2508.00031), 2025
-
-Available in **Python**, **TypeScript/JavaScript**, **Rust**, **Go**, **Zig**, **Lua**, and **Elixir**.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" /></a>
+  <a href="https://arxiv.org/abs/2508.00031"><img src="https://img.shields.io/badge/arXiv-2508.00031-b31b1b.svg" alt="arXiv" /></a>
+  <a href="https://pypi.org/project/cortexa/"><img src="https://img.shields.io/pypi/v/cortexa.svg" alt="PyPI" /></a>
+  <a href="https://www.npmjs.com/package/cortexa"><img src="https://img.shields.io/npm/v/cortexa.svg" alt="npm" /></a>
+  <a href="https://crates.io/crates/cortexa"><img src="https://img.shields.io/crates/v/cortexa.svg" alt="crates.io" /></a>
+  <a href="https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO"><img src="https://pkg.go.dev/badge/github.com/swadhinbiswas/Cortexa/GO.svg" alt="Go Reference" /></a>
+  <a href="https://hex.pm/packages/cortexa"><img src="https://img.shields.io/hexpm/v/cortexa.svg" alt="Hex.pm" /></a>
+</p>
 
 ---
 
-## Why contexa?
+**Cortexa** implements the [Git Context Controller (GCC)](https://arxiv.org/abs/2508.00031) -- a structured, versioned memory system for LLM-based agents. Named after the cerebral cortex, it gives agents a persistent brain that survives across sessions, branches for parallel exploration, and compressed recall at any resolution.
 
-LLM-based agents accumulate observations, thoughts, and actions over time. Context windows are finite. As conversations grow, agents lose track of earlier reasoning, repeat mistakes, or forget prior decisions.
+Available in **Python**, **TypeScript/JavaScript**, **Rust**, **Go**, **Zig**, **Lua**, and **Elixir**. All 7 implementations produce the same `.GCC/` on-disk format (Markdown + YAML) and are fully interoperable.
 
-**contexa** borrows Git's branching model to give agents structured, versioned memory:
+## Why Cortexa?
 
-```
-                    main
-                     |
-    init --> log OTA --> COMMIT --> COMMIT --> MERGE <--+
-                                      |                |
-                                   BRANCH --> COMMIT --+
-                                  (experiment)
-```
+LLM agents lose track of earlier reasoning as context windows fill up. Current workarounds -- full history dumps, naive summarization, or ad-hoc memory stores -- are expensive, lossy, or unstructured.
 
-| Command | Git Equivalent | What It Does |
-|---------|---------------|--------------|
+GCC applies Git's proven branching model to agent memory:
+
+| GCC Command | Git Analogy | What It Does |
+|-------------|-------------|--------------|
 | **OTA Log** | Working directory | Continuous Observation-Thought-Action trace |
-| **COMMIT** | `git commit` | Milestone summary, compresses older OTA steps |
-| **BRANCH** | `git branch` | Isolated workspace for alternative reasoning |
-| **MERGE** | `git merge` | Integrates a successful branch back into main |
+| **COMMIT** | `git commit` | Milestone summary that compresses older OTA steps |
+| **BRANCH** | `git branch` | Isolated workspace for alternative reasoning paths |
+| **MERGE** | `git merge` | Integrates a successful branch back into the main trajectory |
 | **CONTEXT** | `git log` | Retrieves history at K-commit resolution |
 
-The paper shows **K=1 performs best** in most benchmarks -- agents do better with compressed recent context than full history dumps.
+### Results from the paper
+
+The GCC framework achieves state-of-the-art results:
+
+| Benchmark | Score | Model |
+|-----------|-------|-------|
+| **SWE-Bench Verified** | **80.2%** | Claude 4 Sonnet |
+| **BrowseComp-Plus** | **83.4%** | GPT-5 |
+
+Outperforms 26 existing open and commercial agent systems. Key findings:
+
+- **K=1** (most recent commit only) performs best in most benchmarks
+- Each component contributes: RoadMap+COMMIT (69.1%) -> +Logs+CONTEXT (75.3%) -> +Metadata (77.8%) -> +BRANCH&MERGE (80.2%)
+- Agents with GCC allocate more computation (more tool calls) but achieve better cost-efficiency
+
+### Three-tiered memory hierarchy
+
+```
+.GCC/
+  main.md                    # Tier 1: Global roadmap / planning artifact
+  branches/
+    main/
+      commit.md              # Tier 2: Commit-level milestone summaries
+      log.md                 # Tier 3: Fine-grained OTA traces
+      metadata.yaml          # Branch intent, status, provenance
+    experiment/
+      commit.md
+      log.md
+      metadata.yaml
+```
 
 ---
 
@@ -50,15 +74,15 @@ The paper shows **K=1 performs best** in most benchmarks -- agents do better wit
 
 | Language | Package | Install |
 |----------|---------|---------|
-| Python | [`contexa`](https://pypi.org/project/contexa/) | `pip install contexa` |
-| TypeScript/JS | [`contexa`](https://www.npmjs.com/package/contexa) | `npm install contexa` |
-| Rust | [`contexa`](https://crates.io/crates/contexa) | `cargo add contexa` |
-| Go | [`contexa`](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO) | `go get github.com/swadhinbiswas/contexa/GO/cortexa` |
-| Lua | [`contexa`](https://luarocks.org/modules/swadhinbiswas/contexa) | `luarocks install contexa` |
-| Elixir | [`contexa`](https://hex.pm/packages/contexa) | `{:contexa, "~> 0.1.1"}` in mix.exs |
-| Zig | `contexa` | See [Zig README](ZIG/README.md) |
+| Python | [`cortexa`](https://pypi.org/project/cortexa/) | `pip install cortexa` |
+| TypeScript/JS | [`cortexa`](https://www.npmjs.com/package/cortexa) | `npm install cortexa` |
+| Rust | [`cortexa`](https://crates.io/crates/cortexa) | `cargo add cortexa` |
+| Go | [`cortexa`](https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO) | `go get github.com/swadhinbiswas/Cortexa/GO/cortexa` |
+| Lua | [`cortexa`](https://luarocks.org/modules/swadhinbiswas/cortexa) | `luarocks install cortexa` |
+| Elixir | [`cortexa`](https://hex.pm/packages/cortexa) | `{:cortexa, "~> 0.1.1"}` in mix.exs |
+| Zig | `cortexa` | See [Zig README](ZIG/README.md) |
 
-All packages implement the same API and produce the same `.GCC/` file system layout. Workspaces created by one language can be read by another.
+All 7 packages produce the same `.GCC/` file system layout. A workspace created by one language can be read or extended by any other.
 
 ---
 
@@ -67,23 +91,31 @@ All packages implement the same API and produce the same `.GCC/` file system lay
 ### Python
 
 ```python
-from contexa import GCCWorkspace
+from cortexa import GCCWorkspace
 
 ws = GCCWorkspace("/path/to/project")
-ws.init("Build a REST API")
+ws.init("Build a REST API with user auth")
+
+# Agent logs its reasoning
 ws.log_ota("saw empty dir", "scaffold first", "create_files()")
-ws.commit("Project scaffold done")
+ws.log_ota("files created", "implement user model", "write_code('models.py')")
+ws.commit("Project scaffold and User model complete")
+
+# Branch to explore alternatives
 ws.branch("auth-jwt", "Explore JWT authentication")
-ws.commit("JWT middleware implemented")
+ws.log_ota("JWT docs reviewed", "stateless, good for APIs", "implement_jwt()")
+ws.commit("JWT auth middleware implemented")
+
+# Merge and retrieve context
 ws.merge("auth-jwt")
-ctx = ws.context(k=1)
-print(ctx.summary())
+ctx = ws.context(k=1)  # K=1: paper's recommended default
+print(ctx.summary())   # Formatted markdown ready for LLM prompt injection
 ```
 
 ### TypeScript
 
 ```typescript
-import { GCCWorkspace } from "contexa";
+import { GCCWorkspace } from "cortexa";
 
 const ws = new GCCWorkspace("/path/to/project");
 ws.init("Build a REST API");
@@ -99,7 +131,7 @@ console.log(ctx.summary());
 ### Rust
 
 ```rust
-use contexa::GCCWorkspace;
+use cortexa::GCCWorkspace;
 
 let mut ws = GCCWorkspace::new("/path/to/project");
 ws.init("Build a REST API")?;
@@ -115,7 +147,7 @@ println!("{}", ctx.summary());
 ### Go
 
 ```go
-import "github.com/swadhinbiswas/contexa/GO/cortexa"
+import "github.com/swadhinbiswas/Cortexa/GO/cortexa"
 
 ws := cortexa.New("/path/to/project")
 ws.Init("Build a REST API")
@@ -131,9 +163,9 @@ fmt.Println(ctx.Summary())
 ### Zig
 
 ```zig
-const contexa = @import("contexa");
+const cortexa = @import("cortexa");
 
-var ws = contexa.Workspace.init(allocator, "/path/to/project");
+var ws = cortexa.Workspace.init(allocator, "/path/to/project");
 try ws.create("Build a REST API");
 _ = try ws.logOTA("saw empty dir", "scaffold first", "createFiles()");
 const c = try ws.commit("Project scaffold done", null);
@@ -150,9 +182,9 @@ defer ctx.deinit(allocator);
 ### Lua
 
 ```lua
-local contexa = require("contexa")
+local cortexa = require("cortexa")
 
-local ws = contexa.GCCWorkspace.new("/path/to/project")
+local ws = cortexa.GCCWorkspace.new("/path/to/project")
 ws:init("Build a REST API")
 ws:log_ota("saw empty dir", "scaffold first", "create_files()")
 ws:commit("Project scaffold done")
@@ -160,13 +192,13 @@ ws:branch("auth-jwt", "Explore JWT authentication")
 ws:commit("JWT middleware implemented")
 ws:merge("auth-jwt", nil, "main")
 local ctx = ws:context("main", 1)
-print(contexa.context_summary(ctx))
+print(cortexa.context_summary(ctx))
 ```
 
 ### Elixir
 
 ```elixir
-alias Contexa.{Workspace, Models}
+alias Cortexa.{Workspace, Models}
 
 ws = Workspace.new("/path/to/project")
 ws = Workspace.init(ws, "Build a REST API")
@@ -181,43 +213,20 @@ IO.puts(Models.context_summary(ctx))
 
 ---
 
-## File System Layout
-
-All implementations produce the same on-disk structure:
+## Architecture
 
 ```
-your-project/
-  .GCC/
-    main.md                          # Global roadmap
-    branches/
-      main/
-        log.md                       # Continuous OTA trace
-        commit.md                    # Milestone-level summaries
-        metadata.yaml                # Branch intent & status
-      feature-branch/
-        log.md
-        commit.md
-        metadata.yaml
+                      main
+                       |
+      init --> OTA --> COMMIT --> COMMIT ---------> MERGE <--+
+                                    |                        |
+                                 BRANCH --> OTA --> COMMIT --+
+                                (experiment)
+
+      CONTEXT(k=1) returns: roadmap + last commit + current OTA log
 ```
 
-All data is stored as **human-readable Markdown and YAML** -- inspect and debug agent memory directly in your editor.
-
----
-
-## Repository Structure
-
-```
-contexa/
-  PYTHON/        # PyPI: contexa
-  JS/            # npm: contexa
-  RUST/          # crates.io: contexa
-  GO/            # pkg.go.dev: github.com/swadhinbiswas/contexa/GO
-  ZIG/           # Zig package: contexa
-  LUA/           # LuaRocks: contexa
-  ELIXIR/        # Hex.pm: contexa
-```
-
-Each directory is an independent package with its own build tooling, tests, and README.
+The CONTEXT command controls **how much history** the agent sees. The paper's experiments show K=1 (most recent commit only) is optimal -- agents perform better with compressed recent context than with full history dumps.
 
 ---
 
@@ -230,12 +239,34 @@ Each directory is an independent package with its own build tooling, tests, and 
 | **BranchMetadata** | Branch intent and status | `name`, `purpose`, `created_from`, `created_at`, `status`, `merged_into`, `merged_at` |
 | **ContextResult** | CONTEXT retrieval result | `branch_name`, `k`, `commits`, `ota_records`, `main_roadmap`, `metadata` |
 
+All data is stored as **human-readable Markdown and YAML** -- inspect and debug agent memory directly in your editor.
+
+---
+
+## Repository Structure
+
+```
+Cortexa/
+  PYTHON/        # PyPI: cortexa          (Python 3.10+)
+  JS/            # npm: cortexa           (Node.js 18+)
+  RUST/          # crates.io: cortexa     (Rust stable)
+  GO/            # pkg.go.dev             (Go 1.21+)
+  ZIG/           # Zig package            (Zig 0.14+)
+  LUA/           # LuaRocks: cortexa      (Lua 5.1+)
+  ELIXIR/        # Hex.pm: cortexa        (Elixir 1.15+)
+  assets/        # Logo and visual assets
+```
+
+Each directory is an independent package with its own build tooling, tests, and README.
+
 ---
 
 ## Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing instructions, and guidelines.
+
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
+2. Create a feature branch: `git checkout -b feat/my-change`
 3. Make your changes and add tests
 4. Run the test suite for your language
 5. Submit a pull request
@@ -250,11 +281,13 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Citation
 
+If you use Cortexa in research, please cite the original paper:
+
 ```bibtex
 @article{wu2025gcc,
   title={Git Context Controller: Manage the Context of LLM-based Agents like Git},
   author={Wu, Junde and others},
-  journal={arXiv preprint arXiv:2508.00031},
+  journal={arXiv preprint arXiv:2508.00031v2},
   year={2025}
 }
 ```
@@ -263,11 +296,11 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Links
 
-- [Original Paper](https://arxiv.org/abs/2508.00031) -- arXiv:2508.00031
-- [Python (PyPI)](https://pypi.org/project/contexa/)
-- [TypeScript (npm)](https://www.npmjs.com/package/contexa)
-- [Rust (crates.io)](https://crates.io/crates/contexa)
-- [Go (pkg.go.dev)](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO)
-- [Lua (LuaRocks)](https://luarocks.org/modules/swadhinbiswas/contexa)
-- [Elixir (Hex.pm)](https://hex.pm/packages/contexa)
+- [Original Paper](https://arxiv.org/abs/2508.00031) -- arXiv:2508.00031v2
+- [Python (PyPI)](https://pypi.org/project/cortexa/)
+- [TypeScript (npm)](https://www.npmjs.com/package/cortexa)
+- [Rust (crates.io)](https://crates.io/crates/cortexa)
+- [Go (pkg.go.dev)](https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO)
+- [Lua (LuaRocks)](https://luarocks.org/modules/swadhinbiswas/cortexa)
+- [Elixir (Hex.pm)](https://hex.pm/packages/cortexa)
 - [Author: Swadhin Biswas](https://github.com/swadhinbiswas)
