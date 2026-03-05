@@ -1,0 +1,41 @@
+name: Question
+description: Ask a question about using contexa
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about using contexa? Ask below. For bugs, please use the Bug Report template instead.
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      description: Which language implementation is this about?
+      options:
+        - Python
+        - JavaScript / TypeScript
+        - Rust
+        - Go
+        - Zig
+        - Lua
+        - Elixir
+        - General / Multiple
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Any relevant code, configuration, or background that helps explain your question.
+      render: text
