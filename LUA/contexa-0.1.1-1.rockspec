@@ -1,17 +1,17 @@
 rockspec_format = "3.0"
-package = "cortexa"
+package = "contexa"
 version = "0.1.1-1"
 
 source = {
     url = "git+https://github.com/swadhinbiswas/Cortexa.git",
-    tag = "v0.1.1",
+    tag = "v0.1.2",
     dir = "LUA",
 }
 
 description = {
     summary = "Git-inspired context management for LLM agents",
     detailed = [[
-        Cortexa implements COMMIT, BRANCH, MERGE, and CONTEXT operations
+        Contexa implements COMMIT, BRANCH, MERGE, and CONTEXT operations
         over a persistent versioned memory workspace for LLM agents.
         Based on the paper "Git Context Controller" (arXiv:2508.00031).
     ]],
@@ -29,8 +29,8 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
-        ["cortexa"]           = "cortexa/init.lua",
-        ["cortexa.models"]    = "cortexa/models.lua",
-        ["cortexa.workspace"] = "cortexa/workspace.lua",
+        ["contexa"]           = "contexa/init.lua",
+        ["contexa.models"]    = "contexa/models.lua",
+        ["contexa.workspace"] = "contexa/workspace.lua",
     },
 }

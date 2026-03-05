@@ -1,11 +1,11 @@
---- cortexa test suite
+--- contexa test suite
 --- Run with: lua test.lua (requires luafilesystem)
 
--- Adjust package path to find the local cortexa module
+-- Adjust package path to find the local contexa module
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
-local workspace = require("cortexa.workspace")
-local models = require("cortexa.models")
+local workspace = require("contexa.workspace")
+local models = require("contexa.models")
 
 local test_count = 0
 local pass_count = 0
@@ -42,7 +42,7 @@ end
 local tmp_counter = 0
 local function make_tmp()
     tmp_counter = tmp_counter + 1
-    local dir = "/tmp/cortexa_lua_test_" .. os.time() .. "_" .. tmp_counter
+    local dir = "/tmp/contexa_lua_test_" .. os.time() .. "_" .. tmp_counter
     os.execute('rm -rf "' .. dir .. '"')
     os.execute('mkdir -p "' .. dir .. '"')
     return dir
@@ -53,7 +53,7 @@ local function cleanup(dir)
 end
 
 ------------------------------------------------------------------------
-print("cortexa Lua test suite")
+print("contexa Lua test suite")
 print(string.rep("=", 50))
 
 ------------------------------------------------------------------------
