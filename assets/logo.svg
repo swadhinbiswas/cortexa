@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <defs>
+    <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6C63FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="branchGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#34D399;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6C63FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Brain outline (left hemisphere) -->
+  <g transform="translate(30, 20)">
+    <!-- Brain shape -->
+    <path d="M80 140 C30 140, 10 110, 15 80 C18 60, 30 45, 50 40 C48 25, 60 15, 78 15 C90 15, 100 22, 105 35 C115 28, 130 30, 138 42 C150 38, 160 50, 155 65 C165 72, 165 90, 155 100 C158 115, 148 130, 130 138 C115 145, 95 145, 80 140Z"
+          fill="url(#brainGrad)" opacity="0.15" stroke="url(#brainGrad)" stroke-width="2.5"/>
+
+    <!-- Brain folds (sulci) -->
+    <path d="M45 65 Q70 55, 95 70" fill="none" stroke="url(#brainGrad)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M35 90 Q65 78, 100 88" fill="none" stroke="url(#brainGrad)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <path d="M50 112 Q80 100, 120 108" fill="none" stroke="url(#brainGrad)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Git branch lines inside the brain -->
+    <!-- Main branch (vertical spine) -->
+    <line x1="85" y1="35" x2="85" y2="130" stroke="url(#branchGrad)" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Branch 1: diverge left -->
+    <path d="M85 55 Q60 60, 50 80" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Merge back -->
+    <path d="M50 80 Q60 100, 85 105" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,3"/>
+
+    <!-- Branch 2: diverge right -->
+    <path d="M85 70 Q110 68, 125 85" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Merge back -->
+    <path d="M125 85 Q115 105, 85 115" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4,3"/>
+
+    <!-- Commit dots on main branch -->
+    <circle cx="85" cy="45" r="5" fill="#6C63FF"/>
+    <circle cx="85" cy="70" r="5" fill="#6C63FF"/>
+    <circle cx="85" cy="95" r="5" fill="#6C63FF"/>
+    <circle cx="85" cy="120" r="5" fill="#6C63FF"/>
+
+    <!-- Commit dots on branches -->
+    <circle cx="50" cy="80" r="4" fill="#10B981"/>
+    <circle cx="125" cy="85" r="4" fill="#10B981"/>
+
+    <!-- Small neural connection dots -->
+    <circle cx="65" cy="50" r="2" fill="#6C63FF" opacity="0.4"/>
+    <circle cx="110" cy="48" r="2" fill="#6C63FF" opacity="0.4"/>
+    <circle cx="40" cy="100" r="2" fill="#6C63FF" opacity="0.4"/>
+    <circle cx="140" cy="70" r="2" fill="#6C63FF" opacity="0.4"/>
+    <circle cx="130" cy="110" r="2" fill="#6C63FF" opacity="0.4"/>
+    <circle cx="55" cy="125" r="2" fill="#6C63FF" opacity="0.4"/>
+  </g>
+
+  <!-- Text: "Cortexa" -->
+  <text x="215" y="120" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="72" font-weight="700" fill="url(#textGrad)" letter-spacing="-1">
+    Cortexa
+  </text>
+
+  <!-- Tagline -->
+  <text x="218" y="152" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="16" fill="#64748B" letter-spacing="3" font-weight="400">
+    VERSIONED MEMORY FOR AGENTS
+  </text>
+</svg>
