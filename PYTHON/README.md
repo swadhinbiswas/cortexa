@@ -1,11 +1,11 @@
-# contexa
+# cortexa
 
-[![PyPI version](https://img.shields.io/pypi/v/contexa.svg)](https://pypi.org/project/contexa/)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/swadhinbiswas/contexa/blob/main/LICENSE)
-[![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2Fcontexa-black.svg?logo=github)](https://github.com/swadhinbiswas/contexa)
+[![PyPI version](https://img.shields.io/pypi/v/cortexa.svg)](https://pypi.org/project/cortexa/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/swadhinbiswas/Cortexa/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FCortexa-black.svg?logo=github)](https://github.com/swadhinbiswas/Cortexa)
 
-A Python implementation of the **contexa** framework -- Git-inspired context management for LLM agents.
+A Python implementation of the **cortexa** framework -- Git-inspired context management for LLM agents.
 
 Based on: [arXiv:2508.00031](https://arxiv.org/abs/2508.00031) -- *"Git Context Controller: Manage the Context of LLM-based Agents like Git"* (Junde Wu et al., 2025)
 
@@ -73,13 +73,13 @@ The key insight from the paper: by controlling **how much history** the agent se
 ## Installation
 
 ```bash
-pip install contexa
+pip install cortexa
 ```
 
 Or with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv add contexa
+uv add cortexa
 ```
 
 ---
@@ -87,7 +87,7 @@ uv add contexa
 ## Quick Start
 
 ```python
-from contexa import GCCWorkspace
+from cortexa import GCCWorkspace
 
 # 1. Initialize a workspace
 ws = GCCWorkspace("/path/to/project")
@@ -284,7 +284,7 @@ All data is stored as **human-readable Markdown and YAML** -- you can inspect an
 All models support serialization:
 
 ```python
-from contexa import OTARecord, BranchMetadata
+from cortexa import OTARecord, BranchMetadata
 
 # OTARecord <-> dict
 record = OTARecord.from_dict({"timestamp": "...", "observation": "...", ...})
@@ -302,10 +302,10 @@ print(record.to_markdown())
 
 ## Real-World Example
 
-Here's how an autonomous coding agent might use contexa to manage its memory while building a web application:
+Here's how an autonomous coding agent might use cortexa to manage its memory while building a web application:
 
 ```python
-from contexa import GCCWorkspace
+from cortexa import GCCWorkspace
 
 ws = GCCWorkspace("./my-webapp")
 ws.init("Build a Flask web app with user auth, blog posts, and admin panel")
@@ -348,8 +348,8 @@ ws.commit("Blog post CRUD with auth-protected routes")
 
 ```bash
 # Clone the repository
-git clone https://github.com/swadhinbiswas/contexa.git
-cd contexa
+git clone https://github.com/swadhinbiswas/Cortexa.git
+cd cortexa
 
 # Install dev dependencies and run tests
 uv sync
@@ -380,19 +380,19 @@ test_ota_step_increments              # Step auto-increment
 
 Contributions are welcome! Here's how to get started:
 
-1. Fork the repository: [https://github.com/swadhinbiswas/contexa](https://github.com/swadhinbiswas/contexa)
+1. Fork the repository: [https://github.com/swadhinbiswas/Cortexa](https://github.com/swadhinbiswas/Cortexa)
 2. Create a feature branch: `git checkout -b feature/my-feature`
 3. Make your changes and add tests
 4. Run the test suite: `uv run pytest -v`
 5. Submit a pull request
 
-Please open an [issue](https://github.com/swadhinbiswas/contexa/issues) first for major changes to discuss the approach.
+Please open an [issue](https://github.com/swadhinbiswas/Cortexa/issues) first for major changes to discuss the approach.
 
 ---
 
 ## Requirements
 
-- **Python** >= 3.12
+- **Python** >= 3.10
 - **PyYAML** >= 6.0
 
 No other dependencies. The entire implementation uses Python's standard library (`dataclasses`, `pathlib`, `uuid`, `datetime`) plus PyYAML for metadata serialization.
@@ -401,7 +401,7 @@ No other dependencies. The entire implementation uses Python's standard library 
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/swadhinbiswas/contexa/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/swadhinbiswas/Cortexa/blob/main/LICENSE) file for details.
 
 ---
 
@@ -422,8 +422,8 @@ If you use this in research, please cite the original paper:
 
 ## Links
 
-- **GitHub Repository**: [https://github.com/swadhinbiswas/contexa](https://github.com/swadhinbiswas/contexa)
-- **PyPI Package**: [https://pypi.org/project/contexa/](https://pypi.org/project/contexa/)
-- **Issue Tracker**: [https://github.com/swadhinbiswas/contexa/issues](https://github.com/swadhinbiswas/contexa/issues)
+- **GitHub Repository**: [https://github.com/swadhinbiswas/Cortexa](https://github.com/swadhinbiswas/Cortexa)
+- **PyPI Package**: [https://pypi.org/project/cortexa/](https://pypi.org/project/cortexa/)
+- **Issue Tracker**: [https://github.com/swadhinbiswas/Cortexa/issues](https://github.com/swadhinbiswas/Cortexa/issues)
 - **Original Paper**: [arXiv:2508.00031v2](https://arxiv.org/abs/2508.00031v2)
 - **Author**: [Swadhin Biswas](https://github.com/swadhinbiswas)

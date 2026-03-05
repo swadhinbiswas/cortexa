@@ -9,10 +9,48 @@ four core commands: COMMIT, BRANCH, MERGE, and CONTEXT.
 
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, Optional
 import yaml
+
+
+def _sanitize(text: str) -> str:
+    """Escape separator sequences in user-provided content.
+
+    Lines that are exactly ``---`` (the markdown/OTA block separator)
+    would break all parsers that split on ``---\\n``.  We prepend a
+    backslash so the separator is preserved in the stored markdown
+    without confusing the splitter.
+    """
+    return text.replace("\n---\n", "\n\\---\n")
+
+
+def _desanitize(text: str) -> str:
+    """Reverse the escaping applied by :func:`_sanitize`."""
+    return text.replace("\n\\---\n", "\n---\n")
+
+
+def _split_blocks(text: str) -> list[str]:
+    """Split markdown text on ``---\\n`` while respecting escaped separators.
+
+    After naive splitting on ``---\\n``, blocks whose predecessor ends
+    with ``\\`` are rejoined (the backslash means ``\\---\\n`` was an
+    escaped separator produced by :func:`_sanitize`).
+    """
+    raw = text.split("---\n")
+    blocks: list[str] = []
+    i = 0
+    while i < len(raw):
+        block = raw[i]
+        while block.endswith("\\") and i + 1 < len(raw):
+            i += 1
+            block = block + "---\n" + raw[i]
+        blocks.append(block)
+        i += 1
+    return blocks
 
 
 @dataclass
@@ -30,11 +68,11 @@ class OTARecord:
 
     def to_markdown(self) -> str:
         return (
-            f"### Step {self.step}-{self.timestamp}\n"
-            f"**Observation:** {self.observation}\n\n"
-            f"**Thought:** {self.thought}\n\n"
-            f"**Action:** {self.action}\n\n"
-            "--------\n"
+            f"### Step {self.step} — {self.timestamp}\n"
+            f"**Observation:** {_sanitize(self.observation)}\n\n"
+            f"**Thought:** {_sanitize(self.thought)}\n\n"
+            f"**Action:** {_sanitize(self.action)}\n\n"
+            "---\n"
         )
 
     @staticmethod
@@ -61,9 +99,9 @@ class CommitRecord:
         return (
             f"## Commit `{self.commit_id}`\n"
             f"**Timestamp:** {self.timestamp}\n\n"
-            f"**Branch Purpose:** {self.branch_purpose}\n\n"
-            f"**Previous Progress Summary:** {self.previous_progress_summary}\n\n"
-            f"**This Commit's Contribution:** {self.this_commit_contribution}\n\n"
+            f"**Branch Purpose:** {_sanitize(self.branch_purpose)}\n\n"
+            f"**Previous Progress Summary:** {_sanitize(self.previous_progress_summary)}\n\n"
+            f"**This Commit's Contribution:** {_sanitize(self.this_commit_contribution)}\n\n"
             "---\n"
         )
 
