@@ -1,8 +1,8 @@
---- contexa — Git-inspired context management for LLM agents
+--- cortexa — Git-inspired context management for LLM agents
 --- COMMIT, BRANCH, MERGE, and CONTEXT operations over a persistent
 --- versioned memory workspace. Based on arXiv:2508.00031.
 ---
---- @module contexa.models
+--- @module cortexa.models
 
 local M = {}
 
@@ -20,6 +20,26 @@ end
 --- @return string
 function M.timestamp()
     return os.date("!%Y-%m-%dT%H:%M:%S+00:00")
+end
+
+------------------------------------------------------------------------
+-- Input sanitization
+------------------------------------------------------------------------
+
+--- Escape the separator sequence so user content cannot break parsers.
+--- @param text string|nil
+--- @return string
+function M.sanitize(text)
+    if not text then return "" end
+    return (text:gsub("\n---\n", "\n\\---\n"))
+end
+
+--- Reverse the escaping applied by sanitize().
+--- @param text string|nil
+--- @return string
+function M.desanitize(text)
+    if not text then return "" end
+    return (text:gsub("\n\\---\n", "\n---\n"))
 end
 
 ------------------------------------------------------------------------
@@ -57,7 +77,7 @@ function M.ota_to_markdown(rec)
     return string.format(
         "### Step %d — %s\n**Observation:** %s\n\n**Thought:** %s\n\n**Action:** %s\n\n---\n",
         rec.step, rec.timestamp,
-        rec.observation, rec.thought, rec.action
+        M.sanitize(rec.observation), M.sanitize(rec.thought), M.sanitize(rec.action)
     )
 end
 
@@ -98,8 +118,8 @@ function M.commit_to_markdown(rec)
     return string.format(
         "## Commit `%s`\n**Timestamp:** %s\n\n**Branch Purpose:** %s\n\n**Previous Progress Summary:** %s\n\n**This Commit's Contribution:** %s\n\n---\n",
         rec.commit_id, rec.timestamp,
-        rec.branch_purpose, rec.previous_progress_summary,
-        rec.this_commit_contribution
+        M.sanitize(rec.branch_purpose), M.sanitize(rec.previous_progress_summary),
+        M.sanitize(rec.this_commit_contribution)
     )
 end
 
