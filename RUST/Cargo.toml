@@ -1,5 +1,5 @@
 [package]
-name = "cortexa"
+name = "contexa"
 version = "1.1.2"
 edition = "2021"
 description = "Git-inspired context management for LLM agents -- COMMIT, BRANCH, MERGE, and CONTEXT over versioned memory (arXiv:2508.00031)"
@@ -8,8 +8,8 @@ authors = ["Swadhin Biswas <swadhinbiswas.cse@gmail.com>"]
 keywords = ["llm", "agent", "context-management", "git", "memory"]
 categories = ["data-structures", "filesystem"]
 readme = "README.md"
-repository = "https://github.com/swadhinbiswas/Cortexa"
-homepage = "https://github.com/swadhinbiswas/Cortexa"
+repository = "https://github.com/swadhinbiswas/contexa"
+homepage = "https://github.com/swadhinbiswas/contexa"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

@@ -1,9 +1,9 @@
 rockspec_format = "3.0"
-package = "cortexa"
+package = "contexa"
 version = "1.1.2-1"
 
 source = {
-    url = "git+https://github.com/swadhinbiswas/Cortexa.git",
+    url = "git+https://github.com/swadhinbiswas/contexa.git",
     tag = "v1.1.2",
     dir = "LUA",
 }
@@ -15,7 +15,7 @@ description = {
         over a persistent versioned memory workspace for LLM agents.
         Based on the paper "Git Context Controller" (arXiv:2508.00031).
     ]],
-    homepage = "https://github.com/swadhinbiswas/Cortexa",
+    homepage = "https://github.com/swadhinbiswas/contexa",
     license = "MIT",
     maintainer = "Swadhin Biswas <swadhinbiswas.cse@gmail.com>",
     labels = { "llm", "agent", "context-management", "git", "memory" },
@@ -29,8 +29,8 @@ dependencies = {
 build = {
     type = "builtin",
     modules = {
-        ["cortexa"]           = "cortexa/init.lua",
-        ["cortexa.models"]    = "cortexa/models.lua",
-        ["cortexa.workspace"] = "cortexa/workspace.lua",
+        ["contexa"]           = "contexa/init.lua",
+        ["contexa.models"]    = "contexa/models.lua",
+        ["contexa.workspace"] = "contexa/workspace.lua",
     },
 }

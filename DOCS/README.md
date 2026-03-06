@@ -1,6 +1,6 @@
-# Cortexa Documentation
+# Contexa Documentation
 
-This folder contains the web-based documentation for Cortexa.
+This folder contains the web-based documentation for Contexa.
 
 ## Viewing the Documentation
 
@@ -16,7 +16,7 @@ python3 -m http.server 8000
 Or directly open the file in your browser:
 
 ```
-file:///path/to/cortexa/DOCS/index.html
+file:///path/to/contexa/DOCS/index.html
 ```
 
 ## Features

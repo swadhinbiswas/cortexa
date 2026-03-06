@@ -1,21 +1,23 @@
-# cortexa
+# contexa
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/swadhinbiswas/Cortexa/GO.svg)](https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO)
+[![Go Reference](https://pkg.go.dev/badge/github.com/swadhinbiswas/contexa/GO.svg)](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FCortexa-black.svg?logo=github)](https://github.com/swadhinbiswas/Cortexa)
+[![GitHub](https://img.shields.io/badge/GitHub-swadhinbiswas%2FContexa-black.svg?logo=github)](https://github.com/swadhinbiswas/contexa)
 
 **Git-inspired context management for LLM agents.** COMMIT, BRANCH, MERGE, and CONTEXT operations over a persistent versioned memory workspace.
 
-Go implementation of the **cortexa** framework.
+Go implementation of the **contexa** framework.
 
 Based on: [arXiv:2508.00031](https://arxiv.org/abs/2508.00031) -- *"Git Context Controller: Manage the Context of LLM-based Agents like Git"* (Junde Wu et al., 2025)
+
+> **Note:** For full usage examples, cross-language interoperability, and the complete architecture, please see the [main Contexa repository README](https://github.com/swadhinbiswas/contexa).
 
 ---
 
 ## Installation
 
 ```bash
-go get github.com/swadhinbiswas/Cortexa/GO/cortexa
+go get github.com/swadhinbiswas/contexa/GO/contexa
 ```
 
 ---
@@ -27,11 +29,11 @@ package main
 
 import (
     "fmt"
-    "github.com/swadhinbiswas/Cortexa/GO/cortexa"
+    "github.com/swadhinbiswas/contexa/GO/contexa"
 )
 
 func main() {
-    ws := cortexa.New("/path/to/project")
+    ws := contexa.New("/path/to/project")
     if err := ws.Init("Build a REST API service with user auth"); err != nil {
         panic(err)
     }
@@ -175,9 +177,9 @@ All data is stored as **human-readable Markdown and YAML**.
 ## Running Tests
 
 ```bash
-git clone https://github.com/swadhinbiswas/Cortexa.git
-cd cortexa/GO
-go test -v ./cortexa/
+git clone https://github.com/swadhinbiswas/contexa.git
+cd contexa/GO
+go test -v ./contexa/
 ```
 
 20 tests cover all GCC commands: init, OTA logging, commit, branch, merge, context, switch, list, and model serialization.
@@ -212,7 +214,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Links
 
-- [GitHub Repository](https://github.com/swadhinbiswas/Cortexa)
-- [pkg.go.dev](https://pkg.go.dev/github.com/swadhinbiswas/Cortexa/GO)
+- [GitHub Repository](https://github.com/swadhinbiswas/contexa)
+- [pkg.go.dev](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO)
 - [Original Paper](https://arxiv.org/abs/2508.00031)
 - [Author: Swadhin Biswas](https://github.com/swadhinbiswas)

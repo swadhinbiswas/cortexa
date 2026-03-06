@@ -1,22 +1,24 @@
-# cortexa — Lua
+# contexa — Lua
 
 Git-inspired context management for LLM agents — **COMMIT**, **BRANCH**, **MERGE**, and **CONTEXT** operations over a persistent versioned memory workspace.
 
 Based on the paper *"Git Context Controller: Manage the Context of LLM-based Agents like Git"* ([arXiv:2508.00031](https://arxiv.org/abs/2508.00031)).
 
+> **Note:** For full usage examples, cross-language interoperability, and the complete architecture, please see the [main Contexa repository README](https://github.com/swadhinbiswas/contexa).
+
 ## Install
 
 ```bash
-luarocks install cortexa
+luarocks install contexa
 ```
 
 ## Quick Start
 
 ```lua
-local cortexa = require("cortexa")
+local contexa = require("contexa")
 
 -- Create workspace
-local ws = cortexa.GCCWorkspace.new("/tmp/my-project")
+local ws = contexa.GCCWorkspace.new("/tmp/my-project")
 ws:init("Build an AI agent")
 
 -- Log observations
@@ -35,7 +37,7 @@ ws:merge("alt-approach", nil, "main")
 
 -- Retrieve context
 local ctx = ws:context("main", 3)
-print(cortexa.context_summary(ctx))
+print(contexa.context_summary(ctx))
 ```
 
 ## API

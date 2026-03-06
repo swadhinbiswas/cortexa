@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" alt="Cortexa" width="500" />
+  <img src="assets/logo.svg" alt="Contexa" width="500" />
 </p>
 
 <p align="center">
@@ -12,20 +12,20 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT" /></a>
   <a href="https://arxiv.org/abs/2508.00031"><img src="https://img.shields.io/badge/arXiv-2508.00031-b31b1b.svg" alt="arXiv" /></a>
-  <a href="https://pypi.org/project/cortexa/"><img src="https://img.shields.io/pypi/v/cortexa.svg" alt="PyPI" /></a>
-  <a href="https://www.npmjs.com/package/cortexa"><img src="https://img.shields.io/npm/v/cortexa.svg" alt="npm" /></a>
-  <a href="https://crates.io/crates/cortexa"><img src="https://img.shields.io/crates/v/cortexa.svg" alt="crates.io" /></a>
-  <a href="https://pkg.go.dev/github.com/swadhinbiswas/cortexa/GO"><img src="https://pkg.go.dev/badge/github.com/swadhinbiswas/cortexa/GO.svg" alt="Go Reference" /></a>
-  <a href="https://hex.pm/packages/cortexa"><img src="https://img.shields.io/hexpm/v/cortexa.svg" alt="Hex.pm" /></a>
+  <a href="https://pypi.org/project/contexa/"><img src="https://img.shields.io/pypi/v/contexa.svg" alt="PyPI" /></a>
+  <a href="https://www.npmjs.com/package/contexa"><img src="https://img.shields.io/npm/v/contexa.svg" alt="npm" /></a>
+  <a href="https://crates.io/crates/contexa"><img src="https://img.shields.io/crates/v/contexa.svg" alt="crates.io" /></a>
+  <a href="https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO"><img src="https://pkg.go.dev/badge/github.com/swadhinbiswas/contexa/GO.svg" alt="Go Reference" /></a>
+  <a href="https://hex.pm/packages/contexa"><img src="https://img.shields.io/hexpm/v/contexa.svg" alt="Hex.pm" /></a>
 </p>
 
 ---
 
-**Cortexa** implements the [Git Context Controller (GCC)](https://arxiv.org/abs/2508.00031) -- a structured, versioned memory system for LLM-based agents. Named after the cerebral cortex, it gives agents a persistent brain that survives across sessions, branches for parallel exploration, and compressed recall at any resolution.
+**Contexa** implements the [Git Context Controller (GCC)](https://arxiv.org/abs/2508.00031) -- a structured, versioned memory system for LLM-based agents. A play on "context" and "cortex", it gives agents a persistent brain that survives across sessions, branches for parallel exploration, and compressed recall at any resolution.
 
 Available in **Python**, **TypeScript/JavaScript**, **Rust**, **Go**, **Zig**, **Lua**, and **Elixir**. All 7 implementations produce the same `.GCC/` on-disk format (Markdown + YAML) and are fully interoperable.
 
-## Why Cortexa?
+## Why Contexa?
 
 LLM agents lose track of earlier reasoning as context windows fill up. Current workarounds -- full history dumps, naive summarization, or ad-hoc memory stores -- are expensive, lossy, or unstructured.
 
@@ -76,13 +76,13 @@ Outperforms 26 existing open and commercial agent systems. Key findings:
 
 | Language | Package | Install |
 |----------|---------|---------|
-| Python | [`cortexa`](https://pypi.org/project/cortexa/) | `pip install cortexa` |
-| TypeScript/JS | [`cortexa`](https://www.npmjs.com/package/cortexa) | `npm install cortexa` |
-| Rust | [`cortexa-gcc`](https://crates.io/crates/cortexa-gcc) | `cargo add cortexa-gcc` |
-| Go | [`cortexa`](https://pkg.go.dev/github.com/swadhinbiswas/cortexa/GO) | `go get github.com/swadhinbiswas/cortexa/GO/cortexa` |
-| Lua | [`cortexa`](https://luarocks.org/modules/swadhinbiswas/cortexa) | `luarocks install cortexa` |
-| Elixir | [`cortexa`](https://hex.pm/packages/cortexa) | `{:cortexa, "~> 0.1.1"}` in mix.exs |
-| Zig | `cortexa` | See [Zig README](ZIG/README.md) |
+| Python | [`contexa`](https://pypi.org/project/contexa/) | `pip install contexa` |
+| TypeScript/JS | [`contexa`](https://www.npmjs.com/package/contexa) | `npm install contexa` |
+| Rust | [`contexa`](https://crates.io/crates/contexa) | `cargo add contexa` |
+| Go | [`contexa`](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO) | `go get github.com/swadhinbiswas/contexa/GO/contexa` |
+| Lua | [`contexa`](https://luarocks.org/modules/swadhinbiswas/contexa) | `luarocks install contexa` |
+| Elixir | [`contexa`](https://hex.pm/packages/contexa) | `{:contexa, "~> 0.1.1"}` in mix.exs |
+| Zig | `contexa` | See [Zig README](ZIG/README.md) |
 
 All 7 packages produce the same `.GCC/` file system layout. A workspace created by one language can be read or extended by any other.
 
@@ -93,7 +93,7 @@ All 7 packages produce the same `.GCC/` file system layout. A workspace created 
 ### Python
 
 ```python
-from cortexa import GCCWorkspace
+from contexa import GCCWorkspace
 
 ws = GCCWorkspace("/path/to/project")
 ws.init("Build a REST API with user auth")
@@ -117,7 +117,7 @@ print(ctx.summary())   # Formatted markdown ready for LLM prompt injection
 ### TypeScript
 
 ```typescript
-import { GCCWorkspace } from "cortexa";
+import { GCCWorkspace } from "contexa";
 
 const ws = new GCCWorkspace("/path/to/project");
 ws.init("Build a REST API");
@@ -133,7 +133,7 @@ console.log(ctx.summary());
 ### Rust
 
 ```rust
-use cortexa::GCCWorkspace;
+use contexa::GCCWorkspace;
 
 let mut ws = GCCWorkspace::new("/path/to/project");
 ws.init("Build a REST API")?;
@@ -149,9 +149,9 @@ println!("{}", ctx.summary());
 ### Go
 
 ```go
-import "github.com/swadhinbiswas/cortexa/GO/cortexa"
+import "github.com/swadhinbiswas/contexa/GO/contexa"
 
-ws := cortexa.New("/path/to/project")
+ws := contexa.New("/path/to/project")
 ws.Init("Build a REST API")
 ws.LogOTA("saw empty dir", "scaffold first", "createFiles()")
 ws.Commit("Project scaffold done", nil, nil)
@@ -165,9 +165,9 @@ fmt.Println(ctx.Summary())
 ### Zig
 
 ```zig
-const cortexa = @import("cortexa");
+const contexa = @import("contexa");
 
-var ws = cortexa.Workspace.init(allocator, "/path/to/project");
+var ws = contexa.Workspace.init(allocator, "/path/to/project");
 try ws.create("Build a REST API");
 _ = try ws.logOTA("saw empty dir", "scaffold first", "createFiles()");
 const c = try ws.commit("Project scaffold done", null);
@@ -184,9 +184,9 @@ defer ctx.deinit(allocator);
 ### Lua
 
 ```lua
-local cortexa = require("cortexa")
+local contexa = require("contexa")
 
-local ws = cortexa.GCCWorkspace.new("/path/to/project")
+local ws = contexa.GCCWorkspace.new("/path/to/project")
 ws:init("Build a REST API")
 ws:log_ota("saw empty dir", "scaffold first", "create_files()")
 ws:commit("Project scaffold done")
@@ -194,13 +194,13 @@ ws:branch("auth-jwt", "Explore JWT authentication")
 ws:commit("JWT middleware implemented")
 ws:merge("auth-jwt", nil, "main")
 local ctx = ws:context("main", 1)
-print(cortexa.context_summary(ctx))
+print(contexa.context_summary(ctx))
 ```
 
 ### Elixir
 
 ```elixir
-alias Cortexa.{Workspace, Models}
+alias Contexa.{Workspace, Models}
 
 ws = Workspace.new("/path/to/project")
 ws = Workspace.init(ws, "Build a REST API")
@@ -248,14 +248,14 @@ All data is stored as **human-readable Markdown and YAML** -- inspect and debug 
 ## Repository Structure
 
 ```
-Cortexa/
-  PYTHON/        # PyPI: cortexa          (Python 3.10+)
-  JS/            # npm: cortexa           (Node.js 18+)
-  RUST/          # crates.io: cortexa     (Rust stable)
+Contexa/
+  PYTHON/        # PyPI: contexa          (Python 3.10+)
+  JS/            # npm: contexa           (Node.js 18+)
+  RUST/          # crates.io: contexa     (Rust stable)
   GO/            # pkg.go.dev             (Go 1.21+)
   ZIG/           # Zig package            (Zig 0.14+)
-  LUA/           # LuaRocks: cortexa      (Lua 5.1+)
-  ELIXIR/        # Hex.pm: cortexa        (Elixir 1.15+)
+  LUA/           # LuaRocks: contexa      (Lua 5.1+)
+  ELIXIR/        # Hex.pm: contexa        (Elixir 1.15+)
   assets/        # Logo and visual assets
 ```
 
@@ -283,7 +283,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Citation
 
-If you use Cortexa in research, please cite the original paper:
+If you use Contexa in research, please cite the original paper:
 
 ```bibtex
 @article{wu2025gcc,
@@ -299,10 +299,10 @@ If you use Cortexa in research, please cite the original paper:
 ## Links
 
 - [Original Paper](https://arxiv.org/abs/2508.00031) -- arXiv:2508.00031v2
-- [Python (PyPI)](https://pypi.org/project/cortexa/)
-- [TypeScript (npm)](https://www.npmjs.com/package/cortexa)
-- [Rust (crates.io)](https://crates.io/crates/cortexa)
-- [Go (pkg.go.dev)](https://pkg.go.dev/github.com/swadhinbiswas/cortexa/GO)
-- [Lua (LuaRocks)](https://luarocks.org/modules/swadhinbiswas/cortexa)
-- [Elixir (Hex.pm)](https://hex.pm/packages/cortexa)
+- [Python (PyPI)](https://pypi.org/project/contexa/)
+- [TypeScript (npm)](https://www.npmjs.com/package/contexa)
+- [Rust (crates.io)](https://crates.io/crates/contexa)
+- [Go (pkg.go.dev)](https://pkg.go.dev/github.com/swadhinbiswas/contexa/GO)
+- [Lua (LuaRocks)](https://luarocks.org/modules/swadhinbiswas/contexa)
+- [Elixir (Hex.pm)](https://hex.pm/packages/contexa)
 - [Author: Swadhin Biswas](https://github.com/swadhinbiswas)

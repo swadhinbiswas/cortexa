@@ -12,7 +12,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cortexa"
+name = "contexa"
 version = "1.1.2"
 source = { editable = "." }
 dependencies = [
